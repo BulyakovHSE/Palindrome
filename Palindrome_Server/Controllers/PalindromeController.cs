@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Palindrome_Server.Extensions;
 
@@ -22,14 +23,15 @@ namespace Palindrome_Server.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult IsPalindrome(string value)
+        public async Task<IHttpActionResult> IsPalindrome(string value)
         {
             if (_actualThreadCount < _threadCount)
             {
                 _actualThreadCount++;
 
                 var result = value.IsPalindrome();
-                Thread.Sleep(1000);
+
+                await Task.Delay(1000);
 
                 _actualThreadCount--;
 

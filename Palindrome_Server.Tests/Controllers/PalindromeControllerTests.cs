@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Palindrome_Server.Controllers;
@@ -10,24 +11,24 @@ namespace Palindrome_Server.Tests.Controllers
     public class PalindromeControllerTests
     {
         [TestMethod]
-        public void IsPalindrome_ReturnTrue()
+        public async Task IsPalindrome_ReturnTrue()
         {
             var value = "А роза упала на лапу Азора";
             var controller = new PalindromeController();
 
-            var result = controller.IsPalindrome(value) as OkNegotiatedContentResult<bool>;
+            var result = await controller.IsPalindrome(value) as OkNegotiatedContentResult<bool>;
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Content);
         }
 
         [TestMethod]
-        public void IsPalindrome_ReturnFalse()
+        public async Task IsPalindrome_ReturnFalse()
         {
             var value = "А наша роза упала на лапу Азора";
             var controller = new PalindromeController();
 
-            var result = controller.IsPalindrome(value) as OkNegotiatedContentResult<bool>;
+            var result = await controller.IsPalindrome(value) as OkNegotiatedContentResult<bool>;
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.Content);
