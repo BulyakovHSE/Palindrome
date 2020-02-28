@@ -35,7 +35,7 @@ namespace Palindrome_Server.Tests.Controllers
         }
 
         [TestMethod]
-        public void IsPalindrome_ThreadLimit_Ok()
+        public async Task IsPalindrome_ThreadLimit_Ok()
         {
             var value = "";
             PalindromeController controller;
@@ -51,13 +51,13 @@ namespace Palindrome_Server.Tests.Controllers
             }
             Thread.Sleep(100);
             controller = new PalindromeController();
-            var result = controller.IsPalindrome(value);
+            var result = await controller.IsPalindrome(value);
 
             Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<bool>));
         }
 
         [TestMethod]
-        public void IsPalindrome_ThreadLimit_BadRequest()
+        public async Task IsPalindrome_ThreadLimit_BadRequest()
         {
             var value = "";
             PalindromeController controller;
@@ -73,7 +73,7 @@ namespace Palindrome_Server.Tests.Controllers
             }
             Thread.Sleep(100);
             controller = new PalindromeController();
-            var result = controller.IsPalindrome(value);
+            var result = await controller.IsPalindrome(value);
 
             Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
         }
