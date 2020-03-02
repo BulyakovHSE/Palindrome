@@ -14,9 +14,10 @@ namespace Palindrome_Server.Controllers
     public class PalindromeController : ApiController
     {
         private static int _actualThreadCount;
-        private int _threadCount;
+        private static int _threadCount;
+        private static object _lock = new object();
 
-        public PalindromeController()
+        static PalindromeController()
         {
             var threadCountValue = ConfigurationManager.AppSettings["ThreadCount"];
             _threadCount = int.Parse(threadCountValue);
@@ -27,15 +28,27 @@ namespace Palindrome_Server.Controllers
         {
             if (_actualThreadCount < _threadCount)
             {
-                _actualThreadCount++;
+                var task = Task.Factory.StartNew(() =>
+                {
+                    lock (_lock)
+                    {
+                        _actualThreadCount++;
+                    }
 
-                var result = value.IsPalindrome();
+                    var result = value.IsPalindrome();
 
-                await Task.Delay(1000);
+                    Thread.Sleep(1000);
 
-                _actualThreadCount--;
+                    lock (_lock)
+                    {
+                        _actualThreadCount--;
+                    }
 
-                return Ok(result);
+                    return result;
+                });
+                var res = await task;
+
+                return Ok(res);
             }
 
             return BadRequest("Свободных потоков для обработки нет");
